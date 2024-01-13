@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Step Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main>
+        <div class="form_container">
+            <div class="multi_step_form" id="ms_form">
+                <div class="ms_stepper">
+                    <div class="step" data-stepper="1">
+                        <div class="icon"><span>✔</span></div>
+                        <p>Step 1</p>
+                    </div>
+                    <div class="step" data-stepper="2">
+                        <div class="icon"><span>✔</span></div>
+                        <p>Step 2</p>
+                    </div>
+                    <div class="step" data-stepper="3">
+                        <div class="icon"><span>✔</span></div>
+                        <p>Step 3</p>
+                    </div>
+                </div>
+
+                <form action="">
+                    <!-- ******* Step 1 ******* -->
+                    <div class="form_step" data-step="1">
+                        <h3>Your Personal Informations</h3>
+                        <p class="desc">Please enter your personal details.</p>
+
+                        <div class="form_group">
+                            <div class="form_control">
+                                <label for="firstname">First Name</label>
+                                <input id="firstname" type="text" required placeholder="Enter First Name">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="lastname">Last Name</label>
+                                <input id="lastname" type="text" required placeholder="Enter Last Name">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="phone">Phone Number</label>
+                                <input id="phone" type="number" required placeholder="Enter Phone Number">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="email">Email Address</label>
+                                <input id="email" type="email" required placeholder="Enter Email">
+                            </div>
+                        </div>
+
+                        <!-- <button class="stepper_btn" data-btnprev>Back</button> -->
+                        <button class="stepper_btn" data-btnnext>Next Step</button>
+                    </div>
+
+                    <!-- ******* Step 2 ******* -->
+                    <div class="form_step" data-step="2">
+                        <h3>Location Informations</h3>
+                        <p class="desc">Please enter your address details.</p>
+
+                        <div class="form_group">
+                            <div class="form_control">
+                                <label for="city">City</label>
+                                <input id="city" type="text" required placeholder="Enter City">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="post">Postal Code</label>
+                                <input id="post" type="text" required placeholder="Enter Code">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="state">State</label>
+                                <input id="state" type="text" required placeholder="Enter State">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="country">Country</label>
+                                <input id="country" type="number" required placeholder="Enter Country">
+                            </div>
+                        </div>
+
+                        <button class="stepper_btn" data-btnprev>Back</button>
+                        <button class="stepper_btn" data-btnnext>Next Step</button>
+                    </div>
+
+                    <!-- ******* Step 3 ******* -->
+                    <div class="form_step" data-step="3">
+                        <h3>Work Experience</h3>
+                        <p class="desc">Can you talk about your past work experience?</p>
+
+                        <div class="form_group">
+                            <div class="form_control">
+                                <label for="ex1">Experience 1</label>
+                                <input id="ex1" type="text" required placeholder="Enter Experience ">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="position">position</label>
+                                <input id="position" type="text" required placeholder="Enter position">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="ex2">Experience 1</label>
+                                <input id="ex2" type="text" required placeholder="Enter Experience ">
+                            </div>
+
+                            <div class="form_control">
+                                <label for="position2">position</label>
+                                <input id="position2" type="text" required placeholder="Enter position">
+                            </div>
+
+                        </div>
+
+                        <button class="stepper_btn" data-btnprev>Back</button>
+                        <button class="stepper_btn" data-btnnext>Next Step</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="app.js"></script>
+</body>
+
+</html>
