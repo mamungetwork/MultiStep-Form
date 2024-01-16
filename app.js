@@ -6,11 +6,15 @@ const btnSubmit = document.querySelector("[data-btnsubmit]");
 
 let currentStep = 1;
 
-const theForm = document.getElementById("multi_step_form");
-const setHeight = document.querySelector(
-  `[data-step="${currentStep}`
-).offsetHeight;
-theForm.style.height = `${setHeight + 10}px`;
+let setHeight = function () {
+  const theForm = document.getElementById("multi_step_form");
+  const getHeight = document.querySelector(
+    `[data-step="${currentStep}"`
+  ).clientHeight;
+  theForm.style.height = `${getHeight + 10}px`;
+};
+
+setHeight();
 
 allFormSteps.forEach((step, index) => {
   index = index + 1;
@@ -22,43 +26,68 @@ allFormSteps.forEach((step, index) => {
 let formStep = document
   .querySelector(`[data-step="${currentStep}"]`)
   .querySelectorAll("input[required]");
-let isvalid = false;
+let isvalid = true;
+
+function showError(element) {
+  let parentEl = element.parentElement;
+  let getLabel = parentEl.querySelector("label").textContent;
+  let newError = document.createElement("p");
+  if (!parentEl.querySelector(".iserror")) {
+    element.classList.add("error");
+    newError.setAttribute("class", "iserror");
+    newError.textContent = `Please enter your ${getLabel.toLowerCase()}`;
+    parentEl.appendChild(newError);
+  }
+}
+
+function hideError(element) {
+  let parentEl = element.parentElement;
+  let getErrorEl = parentEl.querySelector(".iserror");
+  if (parentEl.querySelector(".iserror")) {
+    element.classList.remove("error");
+    getErrorEl.remove(getErrorEl);
+  }
+}
 
 function inputValidator() {
   formStep = document
     .querySelector(`[data-step="${currentStep}"]`)
     .querySelectorAll("input[required]");
+  allFormStepWithEmail = document
+    .querySelector(`[data-step="${currentStep}"]`)
+    .querySelectorAll("input");
 
-  formStep.forEach((step) => {
-    if (step.getAttribute("type") === "email") {
+  allFormStepWithEmail.forEach((email) => {
+    if (email.getAttribute("type") === "email") {
       var mailformat =
         /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-      if (step.value.match(mailformat)) {
-        step.classList.remove("error");
+      if (email.value.match(mailformat)) {
+        hideError(email);
         isvalid = true;
       } else {
-        step.classList.add("error");
-        step.setAttribute("placeholder", "Enter valid email");
+        showError(email);
+        email.setAttribute("placeholder", "Enter valid email");
         isvalid = false;
       }
     }
+  });
+  formStep.forEach((step) => {
     if (step.getAttribute("type") === "text") {
       if (step.value !== "") {
-        step.classList.remove("error");
+        hideError(step);
         isvalid = true;
       } else {
-        step.classList.add("error");
+        showError(step);
         isvalid = false;
-        console.log(step);
       }
     }
 
     if (step.getAttribute("type") === "number") {
       if (step.value !== "") {
-        step.classList.remove("error");
+        hideError(step);
         isvalid = true;
       } else {
-        step.classList.add("error");
+        showError(step);
         isvalid = false;
       }
     }
@@ -69,17 +98,11 @@ btnNext.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     inputValidator();
 
-    if (formStep.length != 0 && isvalid) {
+    if (formStep.length !== 0 && !isvalid) {
       // After Validation *********
-      if (currentStep < allFormSteps.length) {
-        currentStep++;
-      }
-      changeActive();
-      let completedStep = document.querySelector(
-        `[data-stepper="${currentStep - 1}"]`
-      );
-      completedStep.classList.add("complete");
-    } else if (formStep.length === 0 && !isvalid) {
+      setHeight();
+      return;
+    } else if (isvalid) {
       // When there is no require field *********
       if (currentStep < allFormSteps.length) {
         currentStep++;
@@ -88,10 +111,9 @@ btnNext.forEach((btn) => {
       let completedStep = document.querySelector(
         `[data-stepper="${currentStep - 1}"]`
       );
-      completedStep.classList.add("complete");
+      addCompletedStep(completedStep);
     }
-
-    isvalid = false;
+    setHeight();
   });
 });
 
@@ -100,15 +122,30 @@ btnPrev.forEach((btn) => {
     if (currentStep > 1) {
       currentStep--;
     }
+    setHeight();
     changeActive();
     removeComplete();
     slideOut();
+    formStep.forEach((step) => {
+      hideError(step);
+    });
   });
 });
 
-btnSubmit.addEventListener("click", (e) => {
-  e.preventDefault();
+btnSubmit.addEventListener("click", (ele) => {
   inputValidator();
+  setHeight();
+
+  if (isvalid) {
+    allStepper.forEach((step) => {
+      step.classList.add("complete");
+    });
+    setTimeout(() => {
+      ele.target.setAttribute("type", "submit");
+    }, 350);
+  } else {
+    console.log("Problem");
+  }
 });
 
 function changeActive() {
@@ -138,6 +175,17 @@ function removeComplete() {
       step.classList.remove("complete");
     }
   });
+}
+
+function addCompletedStep(ele) {
+  allStepper.forEach((el, index) => {
+    index = index + 1;
+    if (index < currentStep) {
+      el.classList.add("complete");
+    }
+  });
+  console.log(currentStep);
+  // console.log(ele.target.textContent);
 }
 
 function slideIn() {
