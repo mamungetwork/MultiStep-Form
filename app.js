@@ -58,16 +58,38 @@ function inputValidator() {
     .querySelectorAll("input");
 
   allFormStepWithEmail.forEach((email) => {
-    if (email.getAttribute("type") === "email") {
-      var mailformat =
-        /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-      if (email.value.match(mailformat)) {
+    var mailformat =
+      /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    if (
+      email.getAttribute("type") === "email" &&
+      email.hasAttribute("required")
+    ) {
+      if (email.value === "") {
+        showError(email);
+        isvalid = false;
+      } else {
+        if (email.value.match(mailformat)) {
+          hideError(email);
+          isvalid = true;
+        } else {
+          showError(email);
+          let errorItem = email.parentElement.querySelector(".iserror");
+          errorItem.textContent = `Your email is missing "@"." symbol`;
+          isvalid = false;
+        }
+      }
+    } else if (
+      email.getAttribute("type") === "email" &&
+      !email.hasAttribute("required")
+    ) {
+      if (email.value !== "" && !email.value.match(mailformat)) {
+        showError(email);
+        let errorItem = email.parentElement.querySelector(".iserror");
+        errorItem.textContent = `Your email is missing "@"." symbol`;
+        isvalid = false;
+      } else {
         hideError(email);
         isvalid = true;
-      } else {
-        showError(email);
-        email.setAttribute("placeholder", "Enter valid email");
-        isvalid = false;
       }
     }
   });
@@ -133,18 +155,42 @@ btnPrev.forEach((btn) => {
 });
 
 btnSubmit.addEventListener("click", (ele) => {
+  ele.preventDefault();
   inputValidator();
   setHeight();
+
+  const allInputField = document.querySelectorAll("#multi_step_form input");
 
   if (isvalid) {
     allStepper.forEach((step) => {
       step.classList.add("complete");
     });
+
+    let successEle = document.createElement("div");
+    successEle.classList.add("success");
+    successEle.innerHTML = `<h5>Form submission successful!</h5><p><a href="">Click Here</a> to refresh the page</p>`;
+
+    let formContainer = document.querySelector(".form_container");
+    let showValueEle = document.createElement("div");
+    showValueEle.classList.add("thevalue");
+
+    allFormSteps.forEach((step, index) => {
+      setTimeout(() => {
+        if (step.dataset.step === `${currentStep}`) {
+          step.prepend(successEle);
+        }
+        setHeight();
+      }, 350);
+    });
+    allInputField.forEach((input) => {
+      let theText = `<p>${input.id.toUpperCase()} = ${input.value}</p>`;
+
+      showValueEle.innerHTML += theText;
+    });
     setTimeout(() => {
-      ele.target.setAttribute("type", "submit");
+      formContainer.appendChild(showValueEle);
     }, 350);
   } else {
-    console.log("Problem");
   }
 });
 
@@ -184,8 +230,6 @@ function addCompletedStep(ele) {
       el.classList.add("complete");
     }
   });
-  console.log(currentStep);
-  // console.log(ele.target.textContent);
 }
 
 function slideIn() {
